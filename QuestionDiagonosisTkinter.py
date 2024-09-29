@@ -1,7 +1,7 @@
 
 # Importing the libraries
 from tkinter import *
-from tkinter import messagebox                           
+from tkinter import messagebox,Frame, Label, Button, StringVar, PhotoImage
 import os            
 import webbrowser
 
@@ -207,7 +207,7 @@ class QuestionDigonosis(Frame):
         master.title("Question")
         # root.iconbitmap("")
         master.state("z")
-#        master.minsize(700,350)
+        master.minsize(900,370)
         QuestionDigonosis.objRef=self
         super().__init__(master=master)
         self["bg"]="light blue"
@@ -215,28 +215,28 @@ class QuestionDigonosis(Frame):
         self.iterObj=None
 
     def createWidget(self):
-        self.lblQuestion=Label(self,text="Question",width=12,bg="bisque")
+        self.lblQuestion=Label(self,text="Question",width=12, bg="#FFE4E1")
         self.lblQuestion.grid(row=0,column=0,rowspan=4)
 
-        self.lblDigonosis = Label(self, text="Digonosis",width=12,bg="bisque")
+        self.lblDigonosis = Label(self, text="Digonosis",width=12, bg="#FFE4E1")
         self.lblDigonosis.grid(row=4, column=0,sticky="n",pady=5)
 
         # self.varQuestion=StringVar()
-        self.txtQuestion = Text(self, width=100,height=4)
+        self.txtQuestion = Text(self, width=100,height=4, bg="#F0FFF0", fg="#000000")
         self.txtQuestion.grid(row=0, column=1,rowspan=4,columnspan=20)
 
         self.varDiagonosis=StringVar()
-        self.txtDigonosis =Text(self, width=100,height=14)
+        self.txtDigonosis =Text(self, width=100,height=14, bg="#F0FFF0", fg="#000000")
         self.txtDigonosis.grid(row=4, column=1,columnspan=20,rowspan=20,pady=5)
 
-        self.btnNo=Button(self,text="No",width=12,bg="bisque", command=self.btnNo_Click)
+        self.btnNo=Button(self,text="No",width=12, bg="#FFDAB9", command=self.btnNo_Click)
         self.btnNo.grid(row=25,column=0)
-        self.btnYes = Button(self, text="Yes",width=12,bg="bisque", command=self.btnYes_Click)
+        self.btnYes = Button(self, text="Yes",width=12, bg="#FFDAB9", command=self.btnYes_Click)
         self.btnYes.grid(row=25, column=1,columnspan=20,sticky="e")
 
-        self.btnClear = Button(self, text="Clear",width=12,bg="bisque", command=self.btnClear_Click)
+        self.btnClear = Button(self, text="Clear",width=12, bg="#FFDAB9", command=self.btnClear_Click)
         self.btnClear.grid(row=27, column=0)
-        self.btnStart = Button(self, text="Start",width=12,bg="bisque", command=self.btnStart_Click)
+        self.btnStart = Button(self, text="Start",width=12, bg="#FFDAB9", command=self.btnStart_Click)
         self.btnStart.grid(row=27, column=1,columnspan=20,sticky="e")
     def btnNo_Click(self):
         global val,ans
@@ -275,27 +275,30 @@ class MainForm(Frame):
     def __init__(self, master=None):
         MainForm.main_Root = master
         super().__init__(master=master)
-        master.geometry("300x300")
+        master.geometry("400x400")
         master.title("Account")
         self.createWidget()
     def createWidget(self):
-        self.lblMsg=Label(self, text="HEALTHCARE CHATBOT", bg="lightblue", width="280", height="2", font=("Helvetica 13 bold"))
-        self.lblMsg.pack()
-        self.btnLogin=Button(self, text="LOGIN", bg="lightgreen", height="1", width="15", font=("Helvetica",13),command = self.lblLogin_Click)
-        self.btnLogin.pack()
-        self.btnRegister=Button(self, text="REGISTER", bg="light green", height="1", width="15",font=("Helvetica",13), command = self.btnRegister_Click)
-        self.btnRegister.pack()
-        self.lblTeam=Label(self, text="Made by:", bg="khaki", width = "250", height = "1",padx=10, pady=10, font=("Helvetica", 13))
-        self.lblTeam.pack()
-        self.lblTeam1=Label(self, text="Anushka Bansal", bg="white", width = "250", height = "1", font=("Calibri", 13))
-        self.lblTeam1.pack()
-        self.lblTeam2=Label(self, text="Shreya Sharma", bg="white", width = "250", height = "1", font=("Calibri", 13))
-        self.lblTeam2.pack()
-        self.lblTeam3=Label(self, text="Silvi", bg="white", width = "250", height = "1", font=("Calibri", 13))
-        self.lblTeam3.pack()
-        self.lblTeam3=Label(self, text="Ishika Agarwal", bg="white", width = "250", height = "1", font=("Calibri", 13))
-        self.lblTeam3.pack()
-        
+        self.icon_healthcare = PhotoImage(file="D:/dacs3/HealthChatbot/icons/healthcare.png")
+
+        self.lblMsg=Label(self, text="HEALTHCARE CHATBOT", bg="#A8DADC", width="280", height="2", font=("Helvetica 13 bold"), fg="#1D3557")
+        self.lblMsg.pack(pady=(20, 10))
+
+        self.btnLogin=Button(self, text="LOGIN", bg="#B7E4C7", height="1", width="15", font=("Helvetica", 13), command = self.lblLogin_Click, fg="#2A4747")
+        self.btnLogin.pack(pady=10)
+
+        self.btnRegister=Button(self, text="REGISTER", bg="#B7E4C7", height="1", width="15",font=("Helvetica", 13), command = self.btnRegister_Click, fg="#2A4747")
+        self.btnRegister.pack(pady=10)
+
+        self.lblTeam=Label(self, text="Made by:", bg="#FFE1E1", width="250", height="1", padx=10, pady=10, font=("Helvetica", 13), fg="#2A4747")
+        self.lblTeam.pack(pady=(20, 0))
+        self.lblTeam1=Label(self, text="Tran Thi My Ngoc", bg="white", width="250", height="1", font=("Calibri", 13))
+        self.lblTeam1.pack(pady=5)
+
+        if self.icon_healthcare:
+            self.lblIcon = Label(self, image=self.icon_healthcare, bg="#A8DADC")
+            self.lblIcon.pack(pady=(20, 10))
+
     def lblLogin_Click(self):
         self.destroyPackWidget(MainForm.main_Root)
         frmLogin=Login(MainForm.main_Root)
@@ -320,20 +323,27 @@ class Login(Frame):
         master.geometry("300x250")
         self.createWidget()
     def createWidget(self):
-        self.lblMsg=Label(self, text="Please enter details below to login",width="300",font=("Calibri", 13), padx=10, pady=10, bg="black", fg="white")
+        self.lblMsg=Label(self, text="Please enter details below to login",width="300",font=("Calibri", 13), padx=10, pady=10, bg="#BFD3C1", fg="#2A4747")
         self.lblMsg.pack()
-        self.username=Label(self, text="Username ",padx=10, pady=10,font=("Calibri", 13))
+        self.username=Label(self, text="Username ",padx=10, pady=10,font=("Calibri", 13), bg="#FFE1E1")
         self.username.pack()
         self.username_verify = StringVar()
-        self.username_login_entry = Entry(self, textvariable=self.username_verify)
+        self.username_login_entry = Entry(self, textvariable=self.username_verify, bg="#F0F4EF", fg="#2A4747")
         self.username_login_entry.pack()
-        self.password=Label(self, text="Password ",padx=10, pady=10,font=("Calibri", 13))
+        self.password=Label(self, text="Password ",padx=10, pady=10,font=("Calibri", 13), bg="#FFE1E1")
         self.password.pack()
         self.password_verify = StringVar()
-        self.password_login_entry = Entry(self, textvariable=self.password_verify, show='*')
+        self.password_login_entry = Entry(self, textvariable=self.password_verify, show='*', bg="#F0F4EF", fg="#2A4747")
         self.password_login_entry.pack()
-        self.btnLogin=Button(self, text="Login", width=9, height=1, font=("Calibri", 13), bg="forest green", fg="white", command=self.btnLogin_Click)
-        self.btnLogin.pack()
+
+        self.button_frame = Frame(self)
+        self.button_frame.pack(pady=(10, 0), expand=True)
+
+        self.btnLogin = Button(self.button_frame, text="Login", width=9, height=1, font=("Calibri", 13), bg="#F0F4EF", fg="#2A4747", command=self.btnLogin_Click)
+        self.btnLogin.pack(side=LEFT, padx=(0, 5))
+
+        self.btnBack = Button(self.button_frame, text="Back", width=9, height=1, font=("Calibri", 13), bg="#F0F4EF", fg="#2A4747", command=self.goBack)
+        self.btnBack.pack(side=LEFT)
     def btnLogin_Click(self):
         username1 = self.username_login_entry.get()
         password1 = self.password_login_entry.get()
@@ -344,7 +354,7 @@ class Login(Frame):
             file1 = open(username1, "r")
             verify = file1.read().splitlines()
             if password1 in verify:
-                messagebox.showinfo("Sucess","Login Sucessful")
+                messagebox.showinfo("Success","Login Sucessful")
                 self.destroyPackWidget(Login.main_Root)
                 frmQuestion = QuestionDigonosis(Login.main_Root)
                 frmQuestion.pack()
@@ -352,7 +362,10 @@ class Login(Frame):
                 messagebox.showinfo("Failure", "Login Details are wrong try again")
         else:
             messagebox.showinfo("Failure", "User not found try from another user\n or sign up for new user")
-
+    def goBack(self):
+        self.destroyPackWidget(Login.main_Root)
+        frmMain = MainForm(Login.main_Root)
+        frmMain.pack()
 
 class SignUp(Frame):
     main_Root=None
@@ -368,22 +381,28 @@ class SignUp(Frame):
         master.geometry("300x250")
         self.createWidget()
     def createWidget(self):
-        self.lblMsg=Label(self, text="Please enter the details below",width="300",font=("Calibri", 13), padx=10, pady=10, bg="black", fg="white")
+        self.lblMsg=Label(self, text="Please enter the details below",width="300",font=("Calibri", 13), padx=10, pady=10, bg="#BFD3C1", fg="#2A4747")
         self.lblMsg.pack()
-        self.username_lable = Label(self, text="Username ",padx=10, pady=10,font=("Calibri", 13))
+        self.username_lable = Label(self, text="Username ",padx=10, pady=10,font=("Calibri", 13), bg="#FFE1E1")
         self.username_lable.pack()
         self.username = StringVar()
-        self.username_entry = Entry(self, textvariable=self.username)
+        self.username_entry = Entry(self, textvariable=self.username, bg="#F0F4EF", fg="#2A4747")
         self.username_entry.pack()
 
-        self.password_lable = Label(self, text="Password ",padx=10, pady=10,font=("Calibri", 13))
+        self.password_lable = Label(self, text="Password ",padx=10, pady=10,font=("Calibri", 13), bg="#FFE1E1")
         self.password_lable.pack()
         self.password = StringVar()
         self.password_entry = Entry(self, textvariable=self.password, show='*')
         self.password_entry.pack()
-        self.btnRegister=Button(self, text="Register",font=("Calibri", 13), bg="forest green", fg="white", command=self.register_user)
-        self.btnRegister.pack()
 
+        self.button_frame = Frame(self)
+        self.button_frame.pack(pady=(10, 0), expand=True)
+
+        self.btnRegister = Button(self.button_frame, text="Register", font=("Calibri", 13), bg="#F0F4EF", fg="#2A4747", command=self.register_user)
+        self.btnRegister.pack(side=LEFT, padx=(0, 5))
+
+        self.btnBack = Button(self.button_frame, text="Back", width=9, height=1, font=("Calibri", 13), bg="#F0F4EF", fg="#2A4747", command=self.goBack)
+        self.btnBack.pack(side=LEFT)
 
     def register_user(self):
         file = open(self.username_entry.get(), "w")
@@ -405,6 +424,10 @@ class SignUp(Frame):
 
         frmQuestion.pack()
 
+    def goBack(self):
+        self.destroyPackWidget(SignUp.main_Root)
+        frmMain = MainForm(SignUp.main_Root)
+        frmMain.pack()
 
 
 root = Tk()
