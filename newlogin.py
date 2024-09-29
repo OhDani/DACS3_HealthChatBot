@@ -3,6 +3,8 @@
 from tkinter import *
 import os
 
+from QuestionDiagonosisTkinter import MainForm
+
 
 # Designing window for registration
 def destroyPackWidget(parent):
@@ -149,6 +151,7 @@ def user_not_found():
 
 def delete_login_success():
     login_success_screen.destroy()
+    MainForm(main_screen).pack()
 
 
 def delete_password_not_recognised():
@@ -161,20 +164,21 @@ def delete_user_not_found_screen():
 
 # Designing Main(first) window
 
-def main_account_screen(frmmain):
-    main_screen=frmmain
-    
-    main_screen.geometry("300x250")
-    main_screen.title("Account Login")
-    Label(main_screen,text="HealthBot", bg="yellow", width="300", height="2", font=("Calibri", 14)).pack()
-    Label(main_screen,text="").pack()
-    Button(main_screen,text="Login",bg="light green", height="2", width="30", command=login).pack()
-    Label(main_screen,text="").pack()
-    Button(main_screen,text="Register",bg="light green", height="2", width="30", command=register).pack()
+# def main_account_screen(frmmain):
+#     main_screen=frmmain
+#
+#     main_screen.geometry("300x250")
+#     main_screen.title("Account Login")
+#     Label(main_screen,text="HealthBot", bg="yellow", width="300", height="2", font=("Calibri", 14)).pack()
+#     Label(main_screen,text="").pack()
+#     Button(main_screen,text="Login",bg="light green", height="2", width="30", command=login).pack()
+#     Label(main_screen,text="").pack()
+#     Button(main_screen,text="Register",bg="light green", height="2", width="30", command=register).pack()
 
-    
 
-root = Tk()
-main_account_screen(root)
-# main_screen = root
+
+# root = Tk()
+# main_account_screen(root)
+main_screen = root
 root.mainloop()
+

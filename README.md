@@ -1,7 +1,5 @@
 ## 🤖 HealthCare ChatBot
-Major -1 
-(4th year - 7th semester)
-
+Basic project 4 - VKU
 Health Care Chat-Bot is a Healthcare Domain Chatbot to simulate the predictions of a General Physician. 
 
 ChatBot can be described as software that can chat with people using artificial intelligence. These software are used to perform tasks such as quickly responding to users, informing them, helping to purchase products and providing better service to customers. We have made a healthcare based chatbot. 
@@ -52,10 +50,6 @@ We have used Decision tree for our health care based chat bot.
 Decision Tree is a Supervised learning technique that can be used for both classification and Regression problems, but mostly it is preferred for solving Classification problems. It is a tree-structured classifier, where internal nodes represent the features of a dataset, branches represent the decision rules and each leaf node represents the outcome.It usually mimic human thinking ability while making a decision, so it is easy to understand.
 
 
-## :suspect: Project Members
-
-- Anushka Bansal - 500067844 - R164218014
-- Shreya Sharma - 500068573 - R164218070
-- Silvi - 500069092 - R164218072
-- Ishika Agrawal - 500071154 - R164218097
+## :Author
+- Tran Thi My Ngoc_22KIT
 

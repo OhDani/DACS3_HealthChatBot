@@ -46,12 +46,12 @@ from sklearn.tree import _tree
 # Method to simulate the working of a Chatbot by extracting and formulating questions
 def execute_bot():
 
-    print("Please reply with yes/Yes or no/No for the following symptoms") 
+    print("Please reply with yes/Yes or no/No for the following symptoms")
     def print_disease(node):
         #print(node)
         node = node[0]
         #print(len(node))
-        val  = node.nonzero() 
+        val  = node.nonzero()
         #print(val)
         disease = labelencoder.inverse_transform(val[0])
         return disease
@@ -85,11 +85,11 @@ def execute_bot():
                 present_disease = print_disease(tree_.value[node])
                 print( "You may have " +  present_disease )
                 print()
-                red_cols = dimensionality_reduction.columns 
+                red_cols = dimensionality_reduction.columns
                 symptoms_given = red_cols[dimensionality_reduction.loc[present_disease].values[0].nonzero()]
                 print("symptoms present  " + str(list(symptoms_present)))
                 print()
-                print("symptoms given "  +  str(list(symptoms_given)) )  
+                print("symptoms given "  +  str(list(symptoms_given)) )
                 print()
                 confidence_level = (1.0*len(symptoms_present))/len(symptoms_given)
                 print("confidence level is " + str(confidence_level))
@@ -101,10 +101,10 @@ def execute_bot():
                 print()
                 print('Visit ', str(row['link'].values))
                 #print(present_disease[0])
-                
-    
+
+
         recurse(0, 1)
-    
+
     tree_to_code(classifier,cols)
 
 
@@ -137,49 +137,3 @@ record['link']
 
 # Execute the bot and see it in Action
 execute_bot()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
