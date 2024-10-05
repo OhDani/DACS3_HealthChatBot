@@ -1,16 +1,15 @@
-
 # Importing the libraries
 from tkinter import *
-from tkinter import messagebox,Frame, Label, Button, StringVar, PhotoImage
-import os            
+from tkinter import messagebox, Frame, Label, Button, StringVar, PhotoImage
+import os
 import webbrowser
 
 import numpy as np
 import pandas as pd
-   
+
 
 class HyperlinkManager:
-      
+
     def __init__(self, text):
         self.text = text
         self.text.tag_config("hyper", foreground="blue", underline=1)
@@ -42,6 +41,7 @@ class HyperlinkManager:
                 self.links[tag]()
                 return
 
+
 # Importing the dataset
 training_dataset = pd.read_csv('Training.csv')
 test_dataset = pd.read_csv('Testing.csv')
@@ -55,21 +55,24 @@ dimensionality_reduction = training_dataset.groupby(training_dataset['prognosis'
 
 # Encoding String values to integer constants
 from sklearn.preprocessing import LabelEncoder
+
 labelencoder = LabelEncoder()
 y = labelencoder.fit_transform(Y)
 
 # Splitting the dataset into training set and test set
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 0)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
 
 # Implementing the Decision Tree Classifier
 from sklearn.tree import DecisionTreeClassifier
+
 classifier = DecisionTreeClassifier()
 classifier.fit(X_train, y_train)
 
 # Saving the information of columns
-cols     = training_dataset.columns
-cols     = cols[:-1]
+cols = training_dataset.columns
+cols = cols[:-1]
 
 # Checking the Important features
 importances = classifier.feature_importances_
@@ -79,101 +82,107 @@ features = cols
 # Implementing the Visual Tree
 from sklearn.tree import _tree
 
+
 # Method to simulate the working of a Chatbot by extracting and formulating questions
 def print_disease(node):
-        #print(node)
-        node = node[0]
-        #print(len(node))
-        val  = node.nonzero() 
-        #print(val)
-        disease = labelencoder.inverse_transform(val[0])
-        return disease
+    # print(node)
+    node = node[0]
+    # print(len(node))
+    val = node.nonzero()
+    # print(val)
+    disease = labelencoder.inverse_transform(val[0])
+    return disease
+
+
 def recurse(node, depth):
-            global val,ans
-            global tree_,feature_name,symptoms_present
-            indent = "  " * depth
-            if tree_.feature[node] != _tree.TREE_UNDEFINED:
-                name = feature_name[node]
-                threshold = tree_.threshold[node]
-                yield name + " ?"
-                
-#                ans = input()
-                ans = ans.lower()
-                if ans == 'yes':
-                    val = 1
-                else:
-                    val = 0
-                if  val <= threshold:
-                    yield from recurse(tree_.children_left[node], depth + 1)
-                else:
-                    symptoms_present.append(name)
-                    yield from recurse(tree_.children_right[node], depth + 1)
-            else:
-                strData=""
-                present_disease = print_disease(tree_.value[node])
-#                print( "You may have " +  present_disease )
-#                print()
-                strData="You may have :" +  str(present_disease)
-               
-                QuestionDigonosis.objRef.txtDigonosis.insert(END,str(strData)+'\n')                  
-                
-                red_cols = dimensionality_reduction.columns 
-                symptoms_given = red_cols[dimensionality_reduction.loc[present_disease].values[0].nonzero()]
-#                print("Symptoms present  " + str(list(symptoms_present)))
-#                print()
-                strData="symptoms present:  " + str(list(symptoms_present))
-                QuestionDigonosis.objRef.txtDigonosis.insert(END,str(strData)+'\n')                  
-#                print("Symptoms given "  +  str(list(symptoms_given)) )  
-#                print()
-                strData="symptoms given: "  +  str(list(symptoms_given))
-                QuestionDigonosis.objRef.txtDigonosis.insert(END,str(strData)+'\n')                  
-                confidence_level = (1.0*len(symptoms_present))/len(symptoms_given)
-#                print("onfidence level is " + str(confidence_level))
-#                print()
-                strData="confidence level is: " + str(confidence_level)
-                QuestionDigonosis.objRef.txtDigonosis.insert(END,str(strData)+'\n')                  
-#                print('The model suggests:')
-#                print()
-                strData='The model suggests:'
-                QuestionDigonosis.objRef.txtDigonosis.insert(END,str(strData)+'\n')                  
-                row = doctors[doctors['disease'] == present_disease[0]]
-#                print('Consult ', str(row['name'].values))
-#                print()
-                strData='Consult '+ str(row['name'].values)
-                QuestionDigonosis.objRef.txtDigonosis.insert(END,str(strData)+'\n')                  
-#                print('Visit ', str(row['link'].values))
-                #print(present_disease[0])
-                hyperlink = HyperlinkManager(QuestionDigonosis.objRef.txtDigonosis)
-                strData='Visit '+ str(row['link'].values[0])
-                def click1():
-                    webbrowser.open_new(str(row['link'].values[0]))
-                QuestionDigonosis.objRef.txtDigonosis.insert(INSERT, strData, hyperlink.add(click1))
-                #QuestionDigonosis.objRef.txtDigonosis.insert(END,str(strData)+'\n')                  
-                yield strData
-        
+    global val, ans
+    global tree_, feature_name, symptoms_present
+    indent = "  " * depth
+    if tree_.feature[node] != _tree.TREE_UNDEFINED:
+        name = feature_name[node]
+        threshold = tree_.threshold[node]
+        yield name + " ?"
+
+        #                ans = input()
+        ans = ans.lower()
+        if ans == 'yes':
+            val = 1
+        else:
+            val = 0
+        if val <= threshold:
+            yield from recurse(tree_.children_left[node], depth + 1)
+        else:
+            symptoms_present.append(name)
+            yield from recurse(tree_.children_right[node], depth + 1)
+    else:
+        strData = ""
+        present_disease = print_disease(tree_.value[node])
+        #                print( "You may have " +  present_disease )
+        #                print()
+        strData = "You may have :" + str(present_disease)
+
+        QuestionDigonosis.objRef.txtDigonosis.insert(END, str(strData) + '\n')
+
+        red_cols = dimensionality_reduction.columns
+        symptoms_given = red_cols[dimensionality_reduction.loc[present_disease].values[0].nonzero()]
+        #                print("Symptoms present  " + str(list(symptoms_present)))
+        #                print()
+        strData = "symptoms present:  " + str(list(symptoms_present))
+        QuestionDigonosis.objRef.txtDigonosis.insert(END, str(strData) + '\n')
+        #                print("Symptoms given "  +  str(list(symptoms_given)) )
+        #                print()
+        strData = "symptoms given: " + str(list(symptoms_given))
+        QuestionDigonosis.objRef.txtDigonosis.insert(END, str(strData) + '\n')
+        confidence_level = (1.0 * len(symptoms_present)) / len(symptoms_given)
+        #                print("onfidence level is " + str(confidence_level))
+        #                print()
+        strData = "confidence level is: " + str(confidence_level)
+        QuestionDigonosis.objRef.txtDigonosis.insert(END, str(strData) + '\n')
+        #                print('The model suggests:')
+        #                print()
+        strData = 'The model suggests:'
+        QuestionDigonosis.objRef.txtDigonosis.insert(END, str(strData) + '\n')
+        row = doctors[doctors['disease'] == present_disease[0]]
+        #                print('Consult ', str(row['name'].values))
+        #                print()
+        strData = 'Consult ' + str(row['name'].values)
+        QuestionDigonosis.objRef.txtDigonosis.insert(END, str(strData) + '\n')
+        #                print('Visit ', str(row['link'].values))
+        # print(present_disease[0])
+        hyperlink = HyperlinkManager(QuestionDigonosis.objRef.txtDigonosis)
+        strData = 'Visit ' + str(row['link'].values[0])
+
+        def click1():
+            webbrowser.open_new(str(row['link'].values[0]))
+
+        QuestionDigonosis.objRef.txtDigonosis.insert(INSERT, strData, hyperlink.add(click1))
+        # QuestionDigonosis.objRef.txtDigonosis.insert(END,str(strData)+'\n')
+        yield strData
+
+
 def tree_to_code(tree, feature_names):
-        global tree_,feature_name,symptoms_present
-        tree_ = tree.tree_
-        #print(tree_)
-        feature_name = [
-            feature_names[i] if i != _tree.TREE_UNDEFINED else "undefined!"
-            for i in tree_.feature
-        ]
-        #print("def tree({}):".format(", ".join(feature_names)))
-        symptoms_present = []   
+    global tree_, feature_name, symptoms_present
+    tree_ = tree.tree_
+    # print(tree_)
+    feature_name = [
+        feature_names[i] if i != _tree.TREE_UNDEFINED else "undefined!"
+        for i in tree_.feature
+    ]
+    # print("def tree({}):".format(", ".join(feature_names)))
+    symptoms_present = []
+
+
 #        recurse(0, 1)
-    
+
 
 def execute_bot():
-#    print("Please reply with yes/Yes or no/No for the following symptoms")    
-    tree_to_code(classifier,cols)
-
+    #    print("Please reply with yes/Yes or no/No for the following symptoms")
+    tree_to_code(classifier, cols)
 
 
 # This section of code to be run after scraping the data
 
-doc_dataset = pd.read_csv('doctors_dataset.csv', names = ['Name', 'Description'])
-
+doc_dataset = pd.read_csv('doctors_dataset.csv', names=['Name', 'Description'])
 
 diseases = dimensionality_reduction.index
 diseases = pd.DataFrame(diseases)
@@ -185,7 +194,6 @@ doctors['disease'] = np.nan
 
 doctors['disease'] = diseases['prognosis']
 
-
 doctors['name'] = doc_dataset['Name']
 doctors['link'] = doc_dataset['Description']
 
@@ -194,105 +202,113 @@ record['name']
 record['link']
 
 
-
-
 # Execute the bot and see it in Action
-#execute_bot()
+# execute_bot()
 
 
 class QuestionDigonosis(Frame):
-    objIter=None
-    objRef=None
-    def __init__(self,master=None):
+    objIter = None
+    objRef = None
+
+    def __init__(self, master=None):
         master.title("Question")
         # root.iconbitmap("")
         master.state("z")
-        master.minsize(900,370)
-        QuestionDigonosis.objRef=self
+        master.minsize(900, 370)
+        QuestionDigonosis.objRef = self
         super().__init__(master=master)
-        self["bg"]="light blue"
+        self["bg"] = "light blue"
         self.createWidget()
-        self.iterObj=None
+        self.iterObj = None
 
     def createWidget(self):
-        self.lblQuestion=Label(self,text="Question",width=12, bg="#FFE4E1")
-        self.lblQuestion.grid(row=0,column=0,rowspan=4)
+        self.lblQuestion = Label(self, text="Question", width=12, bg="#FFE4E1")
+        self.lblQuestion.grid(row=0, column=0, rowspan=4)
 
-        self.lblDigonosis = Label(self, text="Digonosis",width=12, bg="#FFE4E1")
-        self.lblDigonosis.grid(row=4, column=0,sticky="n",pady=5)
+        self.lblDigonosis = Label(self, text="Digonosis", width=12, bg="#FFE4E1")
+        self.lblDigonosis.grid(row=4, column=0, sticky="n", pady=5)
 
         # self.varQuestion=StringVar()
-        self.txtQuestion = Text(self, width=100,height=4, bg="#F0FFF0", fg="#000000")
-        self.txtQuestion.grid(row=0, column=1,rowspan=4,columnspan=20)
+        self.txtQuestion = Text(self, width=100, height=4, bg="#F0FFF0", fg="#000000")
+        self.txtQuestion.grid(row=0, column=1, rowspan=4, columnspan=20)
 
-        self.varDiagonosis=StringVar()
-        self.txtDigonosis =Text(self, width=100,height=14, bg="#F0FFF0", fg="#000000")
-        self.txtDigonosis.grid(row=4, column=1,columnspan=20,rowspan=20,pady=5)
+        self.varDiagonosis = StringVar()
+        self.txtDigonosis = Text(self, width=100, height=14, bg="#F0FFF0", fg="#000000")
+        self.txtDigonosis.grid(row=4, column=1, columnspan=20, rowspan=20, pady=5)
 
-        self.btnNo=Button(self,text="No",width=12, bg="#FFDAB9", command=self.btnNo_Click)
-        self.btnNo.grid(row=25,column=0)
-        self.btnYes = Button(self, text="Yes",width=12, bg="#FFDAB9", command=self.btnYes_Click)
-        self.btnYes.grid(row=25, column=1,columnspan=20,sticky="e")
+        self.btnNo = Button(self, text="No", width=12, bg="#FFDAB9", command=self.btnNo_Click)
+        self.btnNo.grid(row=25, column=0)
+        self.btnYes = Button(self, text="Yes", width=12, bg="#FFDAB9", command=self.btnYes_Click)
+        self.btnYes.grid(row=25, column=1, columnspan=20, sticky="e")
 
-        self.btnClear = Button(self, text="Clear",width=12, bg="#FFDAB9", command=self.btnClear_Click)
+        self.btnClear = Button(self, text="Clear", width=12, bg="#FFDAB9", command=self.btnClear_Click)
         self.btnClear.grid(row=27, column=0)
-        self.btnStart = Button(self, text="Start",width=12, bg="#FFDAB9", command=self.btnStart_Click)
-        self.btnStart.grid(row=27, column=1,columnspan=20,sticky="e")
+        self.btnStart = Button(self, text="Start", width=12, bg="#FFDAB9", command=self.btnStart_Click)
+        self.btnStart.grid(row=27, column=1, columnspan=20, sticky="e")
+
     def btnNo_Click(self):
-        global val,ans
-        global val,ans
-        ans='no'
-        str1=QuestionDigonosis.objIter.__next__()
-        self.txtQuestion.delete(0.0,END)
-        self.txtQuestion.insert(END,str1+"\n")
-        
+        global val, ans
+        global val, ans
+        ans = 'no'
+        str1 = QuestionDigonosis.objIter.__next__()
+        self.txtQuestion.delete(0.0, END)
+        self.txtQuestion.insert(END, str1 + "\n")
+
     def btnYes_Click(self):
-        global val,ans
-        ans='yes'
-        self.txtDigonosis.delete(0.0,END)
-        str1=QuestionDigonosis.objIter.__next__()
-        
-#        self.txtDigonosis.insert(END,str1+"\n")
-        
+        global val, ans
+        ans = 'yes'
+        self.txtDigonosis.delete(0.0, END)
+        str1 = QuestionDigonosis.objIter.__next__()
+
+    #        self.txtDigonosis.insert(END,str1+"\n")
+
     def btnClear_Click(self):
-        self.txtDigonosis.delete(0.0,END)
-        self.txtQuestion.delete(0.0,END)
+        self.txtDigonosis.delete(0.0, END)
+        self.txtQuestion.delete(0.0, END)
+
     def btnStart_Click(self):
         execute_bot()
-        self.txtDigonosis.delete(0.0,END)
-        self.txtQuestion.delete(0.0,END)
-        self.txtDigonosis.insert(END,"Please Click on Yes or No for the Above symptoms in Question")                  
-        QuestionDigonosis.objIter=recurse(0, 1)
-        str1=QuestionDigonosis.objIter.__next__()
-        self.txtQuestion.insert(END,str1+"\n")
+        self.txtDigonosis.delete(0.0, END)
+        self.txtQuestion.delete(0.0, END)
+        self.txtDigonosis.insert(END, "Please Click on Yes or No for the Above symptoms in Question")
+        QuestionDigonosis.objIter = recurse(0, 1)
+        str1 = QuestionDigonosis.objIter.__next__()
+        self.txtQuestion.insert(END, str1 + "\n")
 
 
 class MainForm(Frame):
     main_Root = None
+
     def destroyPackWidget(self, parent):
         for e in parent.pack_slaves():
             e.destroy()
+
     def __init__(self, master=None):
         MainForm.main_Root = master
         super().__init__(master=master)
         master.geometry("400x400")
         master.title("Account")
         self.createWidget()
+
     def createWidget(self):
         self.icon_healthcare = PhotoImage(file="D:/dacs3/HealthChatbot/icons/healthcare.png")
 
-        self.lblMsg=Label(self, text="HEALTHCARE CHATBOT", bg="#A8DADC", width="280", height="2", font=("Helvetica 13 bold"), fg="#1D3557")
+        self.lblMsg = Label(self, text="HEALTHCARE CHATBOT", bg="#A8DADC", width="280", height="2",
+                            font=("Helvetica 13 bold"), fg="#1D3557")
         self.lblMsg.pack(pady=(20, 10))
 
-        self.btnLogin=Button(self, text="LOGIN", bg="#B7E4C7", height="1", width="15", font=("Helvetica", 13), command = self.lblLogin_Click, fg="#2A4747")
+        self.btnLogin = Button(self, text="LOGIN", bg="#B7E4C7", height="1", width="15", font=("Helvetica", 13),
+                               command=self.lblLogin_Click, fg="#2A4747")
         self.btnLogin.pack(pady=10)
 
-        self.btnRegister=Button(self, text="REGISTER", bg="#B7E4C7", height="1", width="15",font=("Helvetica", 13), command = self.btnRegister_Click, fg="#2A4747")
+        self.btnRegister = Button(self, text="REGISTER", bg="#B7E4C7", height="1", width="15", font=("Helvetica", 13),
+                                  command=self.btnRegister_Click, fg="#2A4747")
         self.btnRegister.pack(pady=10)
 
-        self.lblTeam=Label(self, text="Made by:", bg="#FFE1E1", width="250", height="1", padx=10, pady=10, font=("Helvetica", 13), fg="#2A4747")
+        self.lblTeam = Label(self, text="Made by:", bg="#FFE1E1", width="250", height="1", padx=10, pady=10,
+                             font=("Helvetica", 13), fg="#2A4747")
         self.lblTeam.pack(pady=(20, 0))
-        self.lblTeam1=Label(self, text="Tran Thi My Ngoc", bg="white", width="250", height="1", font=("Calibri", 13))
+        self.lblTeam1 = Label(self, text="Tran Thi My Ngoc", bg="white", width="250", height="1", font=("Calibri", 13))
         self.lblTeam1.pack(pady=5)
 
         if self.icon_healthcare:
@@ -301,36 +317,39 @@ class MainForm(Frame):
 
     def lblLogin_Click(self):
         self.destroyPackWidget(MainForm.main_Root)
-        frmLogin=Login(MainForm.main_Root)
+        frmLogin = Login(MainForm.main_Root)
         frmLogin.pack()
+
     def btnRegister_Click(self):
         self.destroyPackWidget(MainForm.main_Root)
         frmSignUp = SignUp(MainForm.main_Root)
         frmSignUp.pack()
 
 
-
-        
 class Login(Frame):
-    main_Root=None
-    def destroyPackWidget(self,parent):
+    main_Root = None
+
+    def destroyPackWidget(self, parent):
         for e in parent.pack_slaves():
             e.destroy()
+
     def __init__(self, master=None):
-        Login.main_Root=master
+        Login.main_Root = master
         super().__init__(master=master)
         master.title("Login")
         master.geometry("300x250")
         self.createWidget()
+
     def createWidget(self):
-        self.lblMsg=Label(self, text="Please enter details below to login",width="300",font=("Calibri", 13), padx=10, pady=10, bg="#BFD3C1", fg="#2A4747")
+        self.lblMsg = Label(self, text="Please enter details below to login", width="300", font=("Calibri", 13),
+                            padx=10, pady=10, bg="#BFD3C1", fg="#2A4747")
         self.lblMsg.pack()
-        self.username=Label(self, text="Username ",padx=10, pady=10,font=("Calibri", 13), bg="#FFE1E1")
+        self.username = Label(self, text="Username ", padx=10, pady=10, font=("Calibri", 13), bg="#FFE1E1")
         self.username.pack()
         self.username_verify = StringVar()
         self.username_login_entry = Entry(self, textvariable=self.username_verify, bg="#F0F4EF", fg="#2A4747")
         self.username_login_entry.pack()
-        self.password=Label(self, text="Password ",padx=10, pady=10,font=("Calibri", 13), bg="#FFE1E1")
+        self.password = Label(self, text="Password ", padx=10, pady=10, font=("Calibri", 13), bg="#FFE1E1")
         self.password.pack()
         self.password_verify = StringVar()
         self.password_login_entry = Entry(self, textvariable=self.password_verify, show='*', bg="#F0F4EF", fg="#2A4747")
@@ -339,22 +358,25 @@ class Login(Frame):
         self.button_frame = Frame(self)
         self.button_frame.pack(pady=(10, 0), expand=True)
 
-        self.btnLogin = Button(self.button_frame, text="Login", width=9, height=1, font=("Calibri", 13), bg="#F0F4EF", fg="#2A4747", command=self.btnLogin_Click)
+        self.btnLogin = Button(self.button_frame, text="Login", width=9, height=1, font=("Calibri", 13), bg="#F0F4EF",
+                               fg="#2A4747", command=self.btnLogin_Click)
         self.btnLogin.pack(side=LEFT, padx=(0, 5))
 
-        self.btnBack = Button(self.button_frame, text="Back", width=9, height=1, font=("Calibri", 13), bg="#F0F4EF", fg="#2A4747", command=self.goBack)
+        self.btnBack = Button(self.button_frame, text="Back", width=9, height=1, font=("Calibri", 13), bg="#F0F4EF",
+                              fg="#2A4747", command=self.goBack)
         self.btnBack.pack(side=LEFT)
+
     def btnLogin_Click(self):
         username1 = self.username_login_entry.get()
         password1 = self.password_login_entry.get()
-        
-#        messagebox.showinfo("Failure", self.username1+":"+password1)
+
+        #        messagebox.showinfo("Failure", self.username1+":"+password1)
         list_of_files = os.listdir()
         if username1 in list_of_files:
             file1 = open(username1, "r")
             verify = file1.read().splitlines()
             if password1 in verify:
-                messagebox.showinfo("Success","Login Sucessful")
+                messagebox.showinfo("Success", "Login Sucessful")
                 self.destroyPackWidget(Login.main_Root)
                 frmQuestion = QuestionDigonosis(Login.main_Root)
                 frmQuestion.pack()
@@ -362,34 +384,40 @@ class Login(Frame):
                 messagebox.showinfo("Failure", "Login Details are wrong try again")
         else:
             messagebox.showinfo("Failure", "User not found try from another user\n or sign up for new user")
+
     def goBack(self):
         self.destroyPackWidget(Login.main_Root)
         frmMain = MainForm(Login.main_Root)
         frmMain.pack()
 
+
 class SignUp(Frame):
-    main_Root=None
+    main_Root = None
     print("SignUp Class")
-    def destroyPackWidget(self,parent):
+
+    def destroyPackWidget(self, parent):
         for e in parent.pack_slaves():
             e.destroy()
+
     def __init__(self, master=None):
-        SignUp.main_Root=master
+        SignUp.main_Root = master
         master.title("Register")
         super().__init__(master=master)
         master.title("Register")
         master.geometry("300x250")
         self.createWidget()
+
     def createWidget(self):
-        self.lblMsg=Label(self, text="Please enter the details below",width="300",font=("Calibri", 13), padx=10, pady=10, bg="#BFD3C1", fg="#2A4747")
+        self.lblMsg = Label(self, text="Please enter the details below", width="300", font=("Calibri", 13), padx=10,
+                            pady=10, bg="#BFD3C1", fg="#2A4747")
         self.lblMsg.pack()
-        self.username_lable = Label(self, text="Username ",padx=10, pady=10,font=("Calibri", 13), bg="#FFE1E1")
+        self.username_lable = Label(self, text="Username ", padx=10, pady=10, font=("Calibri", 13), bg="#FFE1E1")
         self.username_lable.pack()
         self.username = StringVar()
         self.username_entry = Entry(self, textvariable=self.username, bg="#F0F4EF", fg="#2A4747")
         self.username_entry.pack()
 
-        self.password_lable = Label(self, text="Password ",padx=10, pady=10,font=("Calibri", 13), bg="#FFE1E1")
+        self.password_lable = Label(self, text="Password ", padx=10, pady=10, font=("Calibri", 13), bg="#FFE1E1")
         self.password_lable.pack()
         self.password = StringVar()
         self.password_entry = Entry(self, textvariable=self.password, show='*')
@@ -398,10 +426,12 @@ class SignUp(Frame):
         self.button_frame = Frame(self)
         self.button_frame.pack(pady=(10, 0), expand=True)
 
-        self.btnRegister = Button(self.button_frame, text="Register", font=("Calibri", 13), bg="#F0F4EF", fg="#2A4747", command=self.register_user)
+        self.btnRegister = Button(self.button_frame, text="Register", font=("Calibri", 13), bg="#F0F4EF", fg="#2A4747",
+                                  command=self.register_user)
         self.btnRegister.pack(side=LEFT, padx=(0, 5))
 
-        self.btnBack = Button(self.button_frame, text="Back", width=9, height=1, font=("Calibri", 13), bg="#F0F4EF", fg="#2A4747", command=self.goBack)
+        self.btnBack = Button(self.button_frame, text="Back", width=9, height=1, font=("Calibri", 13), bg="#F0F4EF",
+                              fg="#2A4747", command=self.goBack)
         self.btnBack.pack(side=LEFT)
 
     def register_user(self):
@@ -409,16 +439,16 @@ class SignUp(Frame):
         file.write(self.username_entry.get() + "\n")
         file.write(self.password_entry.get())
         file.close()
-        
-        self.destroyPackWidget(SignUp.main_Root)
-        
-        self.lblSucess=Label(root, text="Registration Success", fg="green", font=("calibri", 11))
-        self.lblSucess.pack()
-        
-        self.btnSucess=Button(root, text="Click Here to proceed", command=self.btnSucess_Click)
-        self.btnSucess.pack()
-    def btnSucess_Click(self):
 
+        self.destroyPackWidget(SignUp.main_Root)
+
+        self.lblSucess = Label(root, text="Registration Success", fg="green", font=("calibri", 11))
+        self.lblSucess.pack()
+
+        self.btnSucess = Button(root, text="Click Here to proceed", command=self.btnSucess_Click)
+        self.btnSucess.pack()
+
+    def btnSucess_Click(self):
         self.destroyPackWidget(SignUp.main_Root)
         frmQuestion = QuestionDigonosis(SignUp.main_Root)
 
@@ -432,8 +462,6 @@ class SignUp(Frame):
 
 root = Tk()
 
-frmMainForm=MainForm(root)
+frmMainForm = MainForm(root)
 frmMainForm.pack()
 root.mainloop()
-
-
